@@ -1,0 +1,17 @@
+# Secrets & environments (suite-level and any per-tool copies)
+.env
+**/.env
+.venv/
+**/.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Shared corpus & generated artifacts (user data, not source)
+/inputs/
+/outputs/
+reddit_signal_*.md
+*-positioning-arc.md
+*-personas.md
+quadrant-*.png

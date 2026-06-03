@@ -1,0 +1,6 @@
+# Signalyser Suite — shared core dependencies.
+# Tool-specific deps (beautifulsoup4, youtube-transcript-api, matplotlib, ...)
+# are added per phase as each tool lands.
+requests>=2.33.1
+python-dotenv>=1.2.2
+anthropic>=0.40.0
