@@ -219,3 +219,38 @@ button:active { filter: brightness(.95); }
   opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 50;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---- session chip (topbar) ---- */
+.topbar .session-chip {
+  margin-left: auto; display: inline-flex; align-items: center; gap: .4rem;
+  background: var(--panel2); border: 1px solid var(--line2); border-radius: 999px;
+  padding: .2rem .7rem; color: var(--text); font-size: .82rem; font-family: var(--mono);
+}
+.topbar .session-chip:hover { border-color: var(--accent); text-decoration: none; }
+.topbar .session-chip svg { color: var(--accent); }
+
+/* ---- sessions page ---- */
+.session-new { display: flex; gap: .5rem; margin: 1rem 0 1.4rem; max-width: 560px; }
+.session-new input {
+  flex: 1; padding: .55rem .7rem; background: var(--bg); color: var(--text);
+  border: 1px solid var(--line2); border-radius: 7px; font: inherit;
+}
+.session-new input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,140,255,.16); }
+.session-list { list-style: none; padding: 0; margin: 0; }
+.session-row {
+  display: flex; align-items: center; gap: .7rem; padding: .7rem .9rem;
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  margin-bottom: .6rem;
+}
+.session-row .status-dot { width: .65rem; height: .65rem; border-radius: 50%; background: var(--faint); flex: none; }
+.session-row.is-active { border-color: var(--accent-dim); }
+.session-row.is-active .status-dot { background: var(--ok); box-shadow: 0 0 0 3px rgba(78,201,138,.18); }
+.session-name { font-weight: 600; }
+.session-counts { white-space: nowrap; }
+.session-actions { margin-left: auto; display: flex; gap: .4rem; align-items: center; }
+.session-actions .inline { display: inline; margin: 0; }
+.btn-danger {
+  background: var(--err-bg); color: var(--err); border: 1px solid var(--err);
+  padding: .3rem .6rem; font-size: .82rem; font-weight: 500; border-radius: 7px; cursor: pointer;
+}
+.btn-danger:hover { filter: brightness(1.15); }

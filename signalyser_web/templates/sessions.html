@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Sessions</h1>
+<p class="muted">A session is an isolated workspace — its own intel corpus and reports.
+Switch to start analysing something else without mixing data; nothing is deleted when you switch.</p>
+
+<form method="post" action="/sessions/new" class="session-new">
+  <input type="text" name="name" placeholder="new session name, e.g. acme-competitors" required>
+  <button type="submit">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    Create &amp; switch
+  </button>
+</form>
+
+<ul class="session-list">
+  {% for s in sessions %}
+    <li class="session-row {{ 'is-active' if s.active }}">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="session-name">{{ s.name }}{% if s.active %} <span class="badge">active</span>{% endif %}</span>
+      <span class="session-counts muted">{{ s.inputs }} intel · {{ s.outputs }} reports</span>
+      <span class="session-actions">
+        {% if not s.active %}
+          <form method="post" action="/sessions/switch" class="inline">
+            <input type="hidden" name="name" value="{{ s.name }}">
+            <button type="submit" class="btn-ghost">Switch</button>
+          </form>
+        {% else %}
+          <a href="/corpus" class="btn-ghost">Browse</a>
+        {% endif %}
+        <form method="post" action="/sessions/delete" class="inline"
+              onsubmit="return confirm('Delete session \'{{ s.name }}\' and all its files? This cannot be undone.');">
+          <input type="hidden" name="name" value="{{ s.name }}">
+          <button type="submit" class="btn-danger" title="Delete session and its files">Delete</button>
+        </form>
+      </span>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

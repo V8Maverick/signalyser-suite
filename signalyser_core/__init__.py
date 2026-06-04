@@ -24,9 +24,17 @@ from .io import (
     intel_path,
     read_company_intel,
     SOURCE_IDS,
-    INPUTS_DIR,
-    OUTPUTS_DIR,
     SUITE_ROOT,
+    SESSIONS_ROOT,
+    DEFAULT_SESSION,
+    active_session,
+    set_active_session,
+    session_dir,
+    inputs_dir,
+    outputs_dir,
+    list_sessions,
+    create_session,
+    delete_session,
 )
 
 __all__ = [
@@ -36,4 +44,15 @@ __all__ = [
     "add_processing_args", "print_backend", "analyze_large",
     "slugify", "save_report", "save_intel", "intel_path", "read_company_intel",
     "SOURCE_IDS", "INPUTS_DIR", "OUTPUTS_DIR", "SUITE_ROOT",
+    "SESSIONS_ROOT", "DEFAULT_SESSION", "active_session", "set_active_session",
+    "session_dir", "inputs_dir", "outputs_dir", "list_sessions",
+    "create_session", "delete_session",
 ]
+
+
+def __getattr__(name: str):
+    """Delegate the session-dependent path constants to io (resolved live)."""
+    if name in ("INPUTS_DIR", "OUTPUTS_DIR"):
+        from . import io
+        return getattr(io, name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

@@ -19,6 +19,7 @@ from .config import TOOLS, CATEGORY_LABELS, build_argv
 from .runner import manager
 from . import corpus as corpus_mod
 from . import settings as settings_mod
+from . import sessions as sessions_mod
 
 _HERE = Path(__file__).resolve().parent
 TEMPLATES = Jinja2Templates(directory=str(_HERE / "templates"))
@@ -44,6 +45,7 @@ def create_app() -> FastAPI:
     def tools_page(request: Request):
         return TEMPLATES.TemplateResponse(request, "tools.html", {
             "active": "tools",
+            "session": sessions_mod.current(),
             "grouped": _tools_by_category(),
             "category_labels": CATEGORY_LABELS,
             "settings": settings_mod.get_settings(),
@@ -53,6 +55,7 @@ def create_app() -> FastAPI:
     def corpus_page(request: Request):
         return TEMPLATES.TemplateResponse(request, "corpus.html", {
             "active": "corpus",
+            "session": sessions_mod.current(),
             "companies": corpus_mod.list_inputs(),
         })
 
@@ -60,6 +63,7 @@ def create_app() -> FastAPI:
     def reports_page(request: Request):
         return TEMPLATES.TemplateResponse(request, "reports.html", {
             "active": "reports",
+            "session": sessions_mod.current(),
             "reports": corpus_mod.list_outputs(),
         })
 
@@ -70,7 +74,16 @@ def create_app() -> FastAPI:
             return HTMLResponse("<h1>404</h1><p>File not found.</p>", status_code=404)
         return TEMPLATES.TemplateResponse(request, "view.html", {
             "active": "corpus" if root == "inputs" else "reports",
+            "session": sessions_mod.current(),
             "view": view,
+        })
+
+    @app.get("/sessions", response_class=HTMLResponse)
+    def sessions_page(request: Request):
+        return TEMPLATES.TemplateResponse(request, "sessions.html", {
+            "active": "sessions",
+            "session": sessions_mod.current(),
+            "sessions": sessions_mod.list_sessions(),
         })
 
     @app.get("/raw")
@@ -84,6 +97,7 @@ def create_app() -> FastAPI:
     def settings_page(request: Request, saved: int = 0):
         return TEMPLATES.TemplateResponse(request, "settings.html", {
             "active": "settings",
+            "session": sessions_mod.current(),
             "settings": settings_mod.get_settings(),
             "saved": bool(saved),
         })
@@ -137,6 +151,26 @@ def create_app() -> FastAPI:
                              if "reddit_username" in form else None),
         )
         return RedirectResponse(url="/settings?saved=1", status_code=303)
+
+    @app.post("/sessions/switch")
+    async def session_switch(request: Request):
+        form = dict(await request.form())
+        sessions_mod.switch(str(form.get("name") or ""))
+        return RedirectResponse(url="/sessions", status_code=303)
+
+    @app.post("/sessions/new")
+    async def session_new(request: Request):
+        form = dict(await request.form())
+        name = str(form.get("name") or "").strip()
+        if name:
+            sessions_mod.create(name)
+        return RedirectResponse(url="/sessions", status_code=303)
+
+    @app.post("/sessions/delete")
+    async def session_delete(request: Request):
+        form = dict(await request.form())
+        sessions_mod.delete(str(form.get("name") or ""))
+        return RedirectResponse(url="/sessions", status_code=303)
 
     return app
 

@@ -37,8 +37,14 @@ back to local. **Never hardcode or guess an API key.**
 
 ## Conventions
 
-- Collectors write `inputs/{company}-{NNN}.md`; synthesis tools (personas/arc/
-  quadrant) read that corpus; the asset generator (010) consumes personas + arc.
+- Work is organised into **sessions**: `sessions/<name>/{inputs,outputs}`. The
+  active session is sticky in `.env` (`SESSION=`, default `default`). `sc.INPUTS_DIR`
+  / `sc.OUTPUTS_DIR` resolve live to the active session (module __getattr__), so the
+  same tool code reads/writes the active workspace. Switch/create/delete sessions in
+  the web **Sessions** tab; the CLI follows the active session automatically.
+- Collectors write `inputs/{company}-{NNN}.md` (within the active session); synthesis
+  tools (personas/arc/quadrant) read that corpus; the asset generator (010) consumes
+  personas + arc.
 - Per-tool code lives in `tools/<name>/`; tests in `tests/test_<name>.py` (offline).
 - `tools/reddit/` is the original RedAlyser — **leave it unchanged**.
 - `signalyser.py` is the top-level launcher: `python signalyser.py <cmd> [args]`

@@ -13,7 +13,8 @@ __pycache__/
 build/
 dist/
 
-# Shared corpus & generated artifacts (user data, not source)
+# Session workspaces + legacy flat corpus (user data, not source)
+/sessions/
 /inputs/
 /outputs/
 reddit_signal_*.md

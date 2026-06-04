@@ -8,18 +8,20 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from signalyser_core.io import INPUTS_DIR, OUTPUTS_DIR
-
-# Folders the web layer is allowed to read, keyed by the name used in URLs.
-ROOTS = {"inputs": INPUTS_DIR, "outputs": OUTPUTS_DIR}
+import signalyser_core as sc
 
 _MARKDOWN_EXT = {".md", ".markdown"}
 _IMAGE_EXT = {".png", ".jpg", ".jpeg", ".gif", ".svg"}
 
 
+def _roots() -> dict[str, Path]:
+    """The active session's folders, resolved live (the session can change at runtime)."""
+    return {"inputs": sc.inputs_dir(), "outputs": sc.outputs_dir()}
+
+
 def _safe(root_key: str, relname: str) -> Path | None:
-    """Resolve `relname` under ROOTS[root_key], or None if it escapes/doesn't exist."""
-    root = ROOTS.get(root_key)
+    """Resolve `relname` under the active session's folder, or None if it escapes."""
+    root = _roots().get(root_key)
     if root is None:
         return None
     root = root.resolve()
@@ -35,10 +37,10 @@ def _safe(root_key: str, relname: str) -> Path | None:
 
 
 def list_inputs() -> list[dict]:
-    """All intel files in inputs/, grouped by company slug (the {slug}-*.md corpus)."""
-    INPUTS_DIR.mkdir(parents=True, exist_ok=True)
+    """Intel files in the active session's inputs/, grouped by company slug."""
+    inputs = sc.inputs_dir()
     by_company: dict[str, list[dict]] = {}
-    for p in sorted(INPUTS_DIR.glob("*.md")):
+    for p in sorted(inputs.glob("*.md")):
         # Filenames are "{slug}-{suffix}.md"; company slug is everything before the
         # last hyphen group is unreliable, so derive it as the leading token set.
         stem = p.stem
@@ -52,15 +54,15 @@ def list_inputs() -> list[dict]:
 
 
 def list_outputs() -> list[dict]:
-    """All report/asset files under outputs/ (recursive), newest first."""
-    OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+    """Report/asset files under the active session's outputs/ (recursive), newest first."""
+    outputs = sc.outputs_dir()
     items: list[dict] = []
-    for p in OUTPUTS_DIR.rglob("*"):
+    for p in outputs.rglob("*"):
         if not p.is_file():
             continue
         if p.suffix.lower() not in (_MARKDOWN_EXT | _IMAGE_EXT):
             continue
-        rel = p.relative_to(OUTPUTS_DIR).as_posix()
+        rel = p.relative_to(outputs).as_posix()
         items.append({
             "rel": rel,
             "name": p.name,

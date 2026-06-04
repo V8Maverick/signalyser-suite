@@ -27,10 +27,22 @@ tools/
   positioning_arc/      # 008 intel -> 3-horizon positioning arc
   quadrant/             # 007 intel -> competitive quadrant chart
   assets/               # 010 personas + positioning -> written assets (reflection loop)
-inputs/                 # shared corpus: {company}-{NNN}.md (gitignored)
-outputs/                # generated reports/charts (gitignored)
+sessions/               # named workspaces: <name>/{inputs,outputs} (gitignored)
 tests/                  # offline tests (core + per tool)
 ```
+
+## Sessions
+
+Work is organised into **sessions** — named workspaces, each with its own intel
+corpus and reports, under `sessions/<name>/{inputs,outputs}`. This keeps separate
+analyses from mixing and lets you start fresh without deleting anything.
+
+- The **active session** is sticky in `.env` (`SESSION=`, default `default`),
+  shared by the CLI and the web UI. Collectors write into it; synthesis tools read
+  from it.
+- Manage sessions in the web **Sessions** tab: create + switch, browse a session's
+  corpus/reports, or delete one. The CLI automatically follows the active session
+  (no extra flags).
 
 **Pipeline:** collectors (004/005/006/001 + reddit) write `inputs/{company}-{NNN}.md`
 → synthesis (009/008/007) read that corpus → the asset generator (010) consumes
