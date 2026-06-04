@@ -171,6 +171,23 @@ body.ui-v2 .chip-refresh { color: var(--muted); padding: .2rem .4rem; }
 body.ui-v2 .empty-hint, body.ui-v2 .warn-inline { font-size: .82rem; color: var(--muted); }
 body.ui-v2 .warn-inline { display: block; margin-top: .4rem; color: var(--signal); }
 
+/* opportunity scan card */
+body.ui-v2 .opp-card {
+  margin-top: 1.1rem; background: linear-gradient(180deg, rgba(231,179,61,.05), transparent);
+  border: 1px solid var(--signal-dim); border-radius: 12px; padding: 1rem 1.1rem;
+}
+body.ui-v2 .opp-head { display: flex; gap: .7rem; align-items: flex-start; }
+body.ui-v2 .opp-glyph { font-size: 1.1rem; color: var(--signal); line-height: 1.4; }
+body.ui-v2 .opp-head h3 { font-family: var(--display); font-weight: 500; font-size: 1.15rem; margin: 0 0 .15rem; }
+body.ui-v2 .opp-head p { margin: 0; font-size: .85rem; max-width: 52ch; }
+body.ui-v2 .opp-row { display: flex; gap: .5rem; margin-top: .8rem; }
+body.ui-v2 .opp-row input { flex: 1; }
+body.ui-v2 #opp-run {
+  background: var(--signal); color: #1a1406; border: 0; border-radius: 9px; padding: .55rem 1rem;
+  font-family: var(--body); font-weight: 700; font-size: .9rem; cursor: pointer; white-space: nowrap;
+}
+body.ui-v2 #opp-run:hover { filter: brightness(1.06); }
+
 /* instruments */
 body.ui-v2 .instruments { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: .4rem; }
 @media (max-width: 620px) { body.ui-v2 .instruments { grid-template-columns: 1fr; } }

@@ -493,8 +493,19 @@ def analyze_with_cloud(subreddit: str, reddit_data: str, model_key: str) -> str:
 def save_report(subreddit: str, report: str) -> str:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"reddit_signal_{subreddit}_{timestamp}.md"
-    Path(filename).write_text(report, encoding="utf-8")
-    return filename
+    # Save into the active session's outputs/ so the report shows in the web
+    # Reports tab (not the cwd, where it used to vanish). Self-contained: derive
+    # the suite root + active session without importing the core.
+    root = Path(__file__).resolve().parents[2]
+    session = (os.getenv("SESSION") or "default").strip().lower() or "default"
+    outdir = root / "sessions" / session / "outputs"
+    try:
+        outdir.mkdir(parents=True, exist_ok=True)
+        path = outdir / filename
+    except OSError:
+        path = Path(filename)   # fall back to cwd if the sessions tree is unavailable
+    path.write_text(report, encoding="utf-8")
+    return str(path)
 
 
 # ── Processor selection ───────────────────────────────────────────────────────

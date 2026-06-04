@@ -111,6 +111,22 @@ TOOLS: dict[str, Tool] = {
                           required=True, placeholder="notion",
                           help="Needs inputs/<company>-personas.md and -positioning-arc.md."),),
     ),
+    "opportunities": Tool(
+        key="opportunities", label="Opportunity Finder", script="tools/opportunities/opportunities.py",
+        category="generation", source_id=None,
+        blurb="Cross-reference a company's positioning with subreddit demand for "
+              "actionable opportunities + SEO keywords.",
+        fields=(
+            ToolField("company", "Company", "option", flag="--company",
+                      required=True, placeholder="photobox",
+                      help="Must already have positioning/personas in the corpus."),
+            ToolField("subreddit", "Subreddit", "option", flag="--subreddit",
+                      required=True, placeholder="giftideas"),
+            ToolField("num", "Posts to scan", "option", flag="-n", type="number",
+                      default="12", help="Hot posts to read (default 12)."),
+        ),
+        needs_reddit_username=True,
+    ),
 }
 
 CATEGORY_LABELS = {

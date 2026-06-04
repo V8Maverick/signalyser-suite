@@ -46,7 +46,12 @@ back to local. **Never hardcode or guess an API key.**
   tools (personas/arc/quadrant) read that corpus; the asset generator (010) consumes
   personas + arc.
 - Per-tool code lives in `tools/<name>/`; tests in `tests/test_<name>.py` (offline).
-- `tools/reddit/` is the original RedAlyser — **leave it unchanged**.
+- `tools/reddit/` is the original RedAlyser — keep it self-contained (it has its own
+  copies of the processing/env logic; don't couple it to the core). Its report now
+  saves into the active session's `outputs/` so it shows in Reports.
+- `tools/opportunities/` (011) cross-references a company's corpus with subreddit
+  signal (via `signalyser_core.reddit`) → actionable opportunities + SEO keywords,
+  saved as a report + `inputs/<slug>-opportunities.md`.
 - `signalyser.py` is the top-level launcher: `python signalyser.py <cmd> [args]`
   dispatches to a tool (page/jobs/tenk/youtube/personas/arc/quadrant/assets/reddit).
 - `signalyser_web/` is the web layer (FastAPI): `python -m signalyser_web` serves

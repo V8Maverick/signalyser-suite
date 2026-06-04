@@ -109,6 +109,15 @@
     const quad = el("quadrant-run");
     if (quad) quad.addEventListener("click", () => runOne("quadrant", {}, "Competitive Quadrant"));
 
+    const opp = el("opp-run");
+    if (opp) opp.addEventListener("click", () => {
+      const company = (el("company").value || "").trim();
+      const sub = (el("opp-sub").value || "").trim();
+      if (!company) { setStatus("enter a company first"); el("company").focus(); return; }
+      if (!sub) { setStatus("enter a subreddit to scan"); el("opp-sub").focus(); return; }
+      runOne("opportunities", { company, subreddit: sub }, "Opportunity scan · " + company + " × r/" + sub);
+    });
+
     document.querySelectorAll(".inst-run").forEach((b) => {
       b.addEventListener("click", () => {
         const map = (b.dataset.field || "").split(",").map((s) => s.split(":"));

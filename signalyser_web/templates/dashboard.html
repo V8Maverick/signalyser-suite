@@ -58,6 +58,24 @@
           <span>Competitive Quadrant</span>
           <small>plots the whole corpus · needs ≥2 companies</small>
         </button>
+
+        <div class="opp-card">
+          <div class="opp-head">
+            <span class="opp-glyph">◎</span>
+            <div>
+              <h3>Opportunity scan</h3>
+              <p class="muted">Match the company above against a subreddit's live demand —
+                actionable opportunities, routes to market, and SEO keywords.</p>
+            </div>
+          </div>
+          <div class="opp-row">
+            <input id="opp-sub" placeholder="subreddit — e.g. giftideas" autocomplete="off">
+            <button type="button" id="opp-run" data-tool="opportunities">Find opportunities</button>
+          </div>
+          {% if not settings.reddit_username %}
+            <small class="warn-inline">Needs a Reddit username — set one in <a href="/settings">Settings</a>.</small>
+          {% endif %}
+        </div>
       </div>
     </section>
 
