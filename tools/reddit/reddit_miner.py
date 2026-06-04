@@ -547,6 +547,14 @@ def resolve_processing(args: argparse.Namespace) -> tuple[str, str | None]:
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    # Make streaming print() tolerate emoji/arrows the model emits (Windows cp1252
+    # console otherwise crashes mid-stream with UnicodeEncodeError, losing the report).
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
+
     parser = argparse.ArgumentParser(
         description="Mine PMM signals from a subreddit using a local Ollama model."
     )

@@ -70,6 +70,21 @@ def main() -> None:
             elif "usage:" not in proc.stdout.lower():
                 failures.append(f"{rel} under non-venv Python printed no usage text")
 
+    # 4. force_utf8_io lets a cp1252 process print emoji/arrows without crashing
+    #    (the bug that lost cloud reports mid-stream). Test under a non-venv Python,
+    #    whose console default on Windows is cp1252.
+    if other is not None:
+        snippet = ("import _bootstrap; _bootstrap.force_utf8_io(); "
+                   "print('emoji \\U0001f605 arrow \\u2192')")
+        proc = subprocess.run(
+            [other, "-c", snippet],
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+            env={**os.environ, "PYTHONPATH": str(SUITE_ROOT)},
+        )
+        if proc.returncode != 0:
+            failures.append("force_utf8_io did not prevent the cp1252 print crash "
+                            f"(stderr: {proc.stderr.strip()[:120]})")
+
     if failures:
         print("FAIL")
         for f in failures:

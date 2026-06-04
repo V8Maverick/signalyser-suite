@@ -279,13 +279,27 @@ def main() -> None:
         print(raw)
         sys.exit(1)
 
-    png_path = plot_quadrant(data, sc.OUTPUTS_DIR / "quadrant-1.png")
-    print(f"Saved chart:     {png_path}")
+    # Readable summary so the console output is useful on its own (the streamed
+    # JSON above is just the raw model response).
+    print("Competitive quadrant\n")
+    print(f"  X axis: {data['x_axis']['label']}")
+    print(f"          low  <- {data['x_axis']['low']}")
+    print(f"          high -> {data['x_axis']['high']}")
+    print(f"  Y axis: {data['y_axis']['label']}")
+    print(f"          low  <- {data['y_axis']['low']}")
+    print(f"          high -> {data['y_axis']['high']}\n")
+    print("  Placements (x, y):")
+    for c in data["companies"]:
+        print(f"    - {c['name']:<16} ({c['x']:+.1f}, {c['y']:+.1f})")
+    print()
 
+    png_path = plot_quadrant(data, sc.OUTPUTS_DIR / "quadrant-1.png")
     rationale_path = sc.OUTPUTS_DIR / "axes-rationale.md"
     rationale_path.parent.mkdir(parents=True, exist_ok=True)
     rationale_path.write_text(build_rationale_md(data), encoding="utf-8")
-    print(f"Saved rationale: {rationale_path}")
+
+    print(f"Chart (open this):  {png_path}")
+    print(f"Axes rationale:     {rationale_path}")
 
 
 if __name__ == "__main__":

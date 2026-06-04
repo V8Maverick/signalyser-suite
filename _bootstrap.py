@@ -15,6 +15,20 @@ import sys
 import subprocess
 
 
+def force_utf8_io() -> None:
+    """Make stdout/stderr tolerate non-cp1252 chars (emoji, arrows) the model emits.
+
+    On Windows the console defaults to cp1252, so streaming `print()` of model
+    output crashes with UnicodeEncodeError mid-stream — losing the report. Switch
+    the streams to UTF-8 with errors='replace' so they never crash.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
+        except (AttributeError, ValueError, OSError):
+            pass
+
+
 def _venv_python(root: str) -> str | None:
     for cand in (os.path.join(root, ".venv", "Scripts", "python.exe"),  # Windows
                  os.path.join(root, ".venv", "bin", "python")):          # POSIX
@@ -44,6 +58,7 @@ def ensure_venv(entry: str, root: str | None = None, module: str | None = None) 
     root   : suite root; defaults to the parent of the script's directory.
     module : if given, re-exec as `python -m module` rather than by file path.
     """
+    force_utf8_io()  # always — even when we don't need to re-exec
     entry = os.path.abspath(entry)
     if root is None:
         root = _find_root(entry)
