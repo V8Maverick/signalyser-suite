@@ -13,6 +13,7 @@ The original **RedAlyser** Reddit tool is included verbatim and unchanged under
 ## Architecture
 
 ```
+signalyser.py           # one launcher for every tool (python signalyser.py <cmd> ...)
 signalyser_core/        # shared engine: local/cloud analyze, sticky -p/-m, .env, io, chunking
 tools/
   reddit/               # 003 Reddit Signal (verbatim RedAlyser — self-contained)
@@ -23,14 +24,15 @@ tools/
   personas/             # 009 intel -> evidence-based buyer personas
   positioning_arc/      # 008 intel -> 3-horizon positioning arc
   quadrant/             # 007 intel -> competitive quadrant chart
+  assets/               # 010 personas + positioning -> written assets (reflection loop)
 inputs/                 # shared corpus: {company}-{NNN}.md (gitignored)
 outputs/                # generated reports/charts (gitignored)
 tests/                  # offline tests (core + per tool)
 ```
 
 **Pipeline:** collectors (004/005/006/001 + reddit) write `inputs/{company}-{NNN}.md`
-→ synthesis (009/008/007) read that corpus → (planned 010 asset generator) consumes
-personas + positioning.
+→ synthesis (009/008/007) read that corpus → the asset generator (010) consumes
+the personas + positioning arc and writes persona-targeted assets.
 
 ## Processing backend (local vs cloud)
 
@@ -76,6 +78,13 @@ $PY tools/personas/personas.py --company notion
 $PY tools/positioning_arc/arc.py --company notion
 $PY tools/quadrant/quadrant.py
 
+# Generate persona-targeted written assets (capstone)
+$PY tools/assets/assets.py --company notion
+
+# ...or drive any tool through the one launcher
+$PY signalyser.py page https://www.notion.com
+$PY signalyser.py assets --company notion
+
 # Flip to cloud (sticky thereafter)
 $PY tools/page_decoder/decode.py https://www.linear.app -p cloud -m sonnet-4.6
 ```
@@ -91,6 +100,9 @@ The reddit tool keeps its own interface (`tools/reddit/`, see its README).
 
 ## Status
 
-Phase 1 (core) ✅ · Phase 2–4 (collectors + synthesis) in progress ·
-Phase 5 (010 asset generator + `redalyser`/`signalyser` launcher) planned ·
+Phase 1 (core) ✅ · Phase 2–4 (collectors + synthesis) ✅ ·
+Phase 5 (010 asset generator + `signalyser` launcher) ✅ ·
 G2 (002) skipped (paid Firecrawl + anti-scraping). See `../RedAlyser/SUITE_PLAN.md`.
+
+All tools run offline-tested green (`tests/test_*.py`). Live model runs (local
+Ollama / cloud Anthropic) are exercised manually, not in the test suite.

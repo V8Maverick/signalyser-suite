@@ -28,9 +28,14 @@ back to local. **Never hardcode or guess an API key.**
 
 ## Conventions
 
-- Collectors write `inputs/{company}-{NNN}.md`; synthesis tools read that corpus.
+- Collectors write `inputs/{company}-{NNN}.md`; synthesis tools (personas/arc/
+  quadrant) read that corpus; the asset generator (010) consumes personas + arc.
 - Per-tool code lives in `tools/<name>/`; tests in `tests/test_<name>.py` (offline).
 - `tools/reddit/` is the original RedAlyser — **leave it unchanged**.
+- `signalyser.py` is the top-level launcher: `python signalyser.py <cmd> [args]`
+  dispatches to a tool (page/jobs/tenk/youtube/personas/arc/quadrant/assets/reddit).
+- Console output stays ASCII-only (no box-drawing chars) — the Windows cp1252
+  console raises `UnicodeEncodeError` on them.
 
 ## Tests
 
