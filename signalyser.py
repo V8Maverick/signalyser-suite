@@ -71,4 +71,8 @@ def main(argv: list[str]) -> int:
 
 
 if __name__ == "__main__":
+    # Self-heal: run the launcher (and thus every tool it spawns) under the suite
+    # venv, so it works no matter which Python invoked `signalyser.py`.
+    import _bootstrap
+    _bootstrap.ensure_venv(__file__, root=str(SUITE_ROOT))
     raise SystemExit(main(sys.argv[1:]))

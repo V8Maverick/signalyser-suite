@@ -17,6 +17,14 @@ The processor (-p) and cloud model (-m) are sticky — once set they persist in
 .env for every run until changed (handled by the shared core).
 """
 
+# Self-heal: re-exec under the suite .venv so signalyser_core and third-party deps
+# resolve no matter which Python / working dir launched this tool. See _bootstrap.py.
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+if __name__ == "__main__":
+    import _bootstrap
+    _bootstrap.ensure_venv(__file__)
+
 import sys
 import re
 import html

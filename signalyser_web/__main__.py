@@ -5,9 +5,20 @@ also what launches each tool subprocess, so the child processes inherit the
 suite's installed signalyser_core.
 """
 import argparse
+import os
+import sys
 
 
 def main() -> None:
+    # Self-heal: run the server (and thus every tool subprocess it launches via
+    # sys.executable) under the suite venv, however `python -m signalyser_web`
+    # was invoked.
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _root not in sys.path:
+        sys.path.insert(0, _root)
+    import _bootstrap
+    _bootstrap.ensure_venv(__file__, root=_root, module="signalyser_web")
+
     parser = argparse.ArgumentParser(description="Serve the Signalyser suite web UI.")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8000)

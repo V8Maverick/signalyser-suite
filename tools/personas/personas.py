@@ -14,6 +14,14 @@ The personas document is saved two ways:
   - inputs/<slug>-personas.md, so the downstream asset generator can read it.
 """
 
+# Self-heal: re-exec under the suite .venv so signalyser_core and third-party deps
+# resolve no matter which Python / working dir launched this tool. See _bootstrap.py.
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+if __name__ == "__main__":
+    import _bootstrap
+    _bootstrap.ensure_venv(__file__)
+
 import sys
 import argparse
 

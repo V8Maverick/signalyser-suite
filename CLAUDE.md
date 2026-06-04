@@ -23,9 +23,13 @@ local/cloud, fallback, and the API-key flow stay consistent.
 ./setup.sh        # venv + deps + editable install (pip install -e .)
 ```
 The suite is installed **editable** (`pip install -e .`, run by `setup.sh`) so
-`import signalyser_core` / `import signalyser_web` resolve from any cwd. This is
-required: tools are launched as subprocesses (by the launcher and the web app)
-and would otherwise fail with `ModuleNotFoundError: signalyser_core`.
+`import signalyser_core` / `import signalyser_web` resolve from any cwd.
+
+Tools also **self-heal**: each entry point re-execs under the suite `.venv` (see
+`_bootstrap.py` + the shim at the top of every `tools/*/*.py`), so running a tool
+with the wrong Python — e.g. the system `python` instead of the venv — Just Works
+instead of failing with `ModuleNotFoundError`. Keep that shim above all
+third-party imports, and **don't remove `_bootstrap.py`**.
 
 Local mode needs Ollama running (`ollama pull qwen3.5:9b`). Cloud mode needs
 `ANTHROPIC_API_KEY` — the tools prompt to paste one (saved to `.env`) or fall

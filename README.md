@@ -88,10 +88,13 @@ Every tool takes the same flags, shared from the core:
 ```
 
 The editable install (`pip install -e .`) makes `import signalyser_core` /
-`import signalyser_web` resolve from any working directory. It is **required**:
-direct tool runs, the launcher, and the web app all spawn tools as subprocesses
-that import the core, and those fail with `ModuleNotFoundError: signalyser_core`
-without it.
+`import signalyser_web` resolve from any working directory.
+
+You don't have to remember to use the venv's Python, either: every tool
+**self-heals** — if you launch it with the wrong interpreter (e.g. a bare
+`python tools/page_decoder/decode.py ...` that resolves to the system Python), it
+transparently re-execs itself under the suite `.venv`. So direct runs, the
+launcher, and the web app all work regardless of which `python` you type.
 
 Ollama must be running with a model pulled for local mode:
 ```bash
