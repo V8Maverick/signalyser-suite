@@ -58,6 +58,14 @@ remember each tool's flags:
 python -m signalyser_web            # serves http://localhost:8000 (flags: --host/--port/--reload)
 ```
 
+On Windows, convenience wrappers handle start/stop cleanly (the venv launcher
+spawns a child process, so a stray server is best killed by port):
+
+```powershell
+.\start-web.ps1            # runs in the foreground (Ctrl+C stops it), opens the browser
+.\stop-web.ps1            # kills the listener on the port + any signalyser_web procs
+```
+
 Then open <http://localhost:8000>. Four tabs:
 
 - **Tools** — pick a tool, fill its form, and launch a run; output **streams live**

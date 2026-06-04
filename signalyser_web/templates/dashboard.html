@@ -36,19 +36,6 @@
           everything collected about it.</p>
         <input id="company" class="company-input" type="text" placeholder="company — e.g. notion"
                autocomplete="off" spellcheck="false">
-        {% if companies %}
-        <div class="chips">
-          <span class="chips-label">In corpus</span>
-          {% for c in companies %}
-            <button type="button" class="company-chip" data-company="{{ c.company }}">
-              {{ c.company }}<span class="chip-n">{{ c.files|length }}</span>
-            </button>
-          {% endfor %}
-          <a href="/tools" class="chip-refresh" title="Reload corpus" aria-label="Reload">&#8635;</a>
-        </div>
-        {% else %}
-        <p class="empty-hint">No companies in this session yet — run an intake above first.</p>
-        {% endif %}
         <div class="tool-buttons">
           <button type="button" class="analyse-btn" data-tool="personas" data-needs="company">Personas</button>
           <button type="button" class="analyse-btn" data-tool="arc" data-needs="company">Positioning&nbsp;Arc</button>
