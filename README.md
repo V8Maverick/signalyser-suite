@@ -14,7 +14,9 @@ The original **RedAlyser** Reddit tool is included verbatim and unchanged under
 
 ```
 signalyser.py           # one launcher for every tool (python signalyser.py <cmd> ...)
+pyproject.toml          # editable install metadata (pip install -e .)
 signalyser_core/        # shared engine: local/cloud analyze, sticky -p/-m, .env, io, chunking
+signalyser_web/         # FastAPI web UI (python -m signalyser_web) — forms + live run streaming
 tools/
   reddit/               # 003 Reddit Signal (verbatim RedAlyser — self-contained)
   page_decoder/         # 004 Competitor page -> strategic briefing
@@ -33,6 +35,31 @@ tests/                  # offline tests (core + per tool)
 **Pipeline:** collectors (004/005/006/001 + reddit) write `inputs/{company}-{NNN}.md`
 → synthesis (009/008/007) read that corpus → the asset generator (010) consumes
 the personas + positioning arc and writes persona-targeted assets.
+
+## Web UI
+
+A FastAPI front end gives every tool a browser-based form, so you don't have to
+remember each tool's flags:
+
+```bash
+python -m signalyser_web            # serves http://localhost:8000 (flags: --host/--port/--reload)
+```
+
+Then open <http://localhost:8000>. Four tabs:
+
+- **Tools** — pick a tool, fill its form, and launch a run; output **streams live**
+  in the browser (each tool runs as the same subprocess the launcher uses).
+- **Corpus** — browse the collected `inputs/{company}-{NNN}.md` intel.
+- **Reports** — browse generated `outputs/` reports and charts.
+- **Settings** — the GUI for the sticky `-p/-m` backend selectors and the
+  `ANTHROPIC_API_KEY`.
+
+The web app **reuses the same `.env`** as the CLI: the Settings tab and the
+`-p/-m` flags are two front ends to one sticky config, so they stay in sync.
+
+> The suite must be installed editable (`pip install -e .`, done by `setup.sh`)
+> for the web app to work: it launches each tool as a subprocess, and those
+> children need to `import signalyser_core` from any working directory.
 
 ## Processing backend (local vs cloud)
 
@@ -53,9 +80,18 @@ Every tool takes the same flags, shared from the core:
 ## Setup
 
 ```bash
-./setup.sh              # macOS/Linux: venv + all deps
-# Windows: py -m venv .venv ; .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+./setup.sh              # macOS/Linux: venv + all deps + editable install (pip install -e .)
+# Windows:
+#   py -m venv .venv
+#   .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+#   .\.venv\Scripts\python.exe -m pip install -e .   # editable install of the suite
 ```
+
+The editable install (`pip install -e .`) makes `import signalyser_core` /
+`import signalyser_web` resolve from any working directory. It is **required**:
+direct tool runs, the launcher, and the web app all spawn tools as subprocesses
+that import the core, and those fail with `ModuleNotFoundError: signalyser_core`
+without it.
 
 Ollama must be running with a model pulled for local mode:
 ```bash
@@ -96,6 +132,7 @@ The reddit tool keeps its own interface (`tools/reddit/`, see its README).
 ```bash
 .venv/bin/python tests/test_core.py        # shared engine
 .venv/bin/python tests/test_<tool>.py      # per tool (offline, no network/LLM)
+.venv/bin/python tests/test_web.py         # web UI (offline, via TestClient — no server)
 ```
 
 ## Status

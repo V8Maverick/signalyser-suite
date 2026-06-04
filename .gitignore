@@ -8,6 +8,11 @@
 __pycache__/
 *.pyc
 
+# Packaging artifacts (editable install)
+*.egg-info/
+build/
+dist/
+
 # Shared corpus & generated artifacts (user data, not source)
 /inputs/
 /outputs/

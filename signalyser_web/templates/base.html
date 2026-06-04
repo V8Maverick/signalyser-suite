@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>{% block title %}Signalyser Suite{% endblock %}</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <a href="#main" class="sr-only">Skip to content</a>
+  <header class="topbar">
+    <div class="brand">Signalyser <span>Suite</span></div>
+    <nav aria-label="Primary">
+      <a href="/tools" class="{{ 'on' if active == 'tools' }}" {{ 'aria-current=page' if active == 'tools' }}>Tools</a>
+      <a href="/corpus" class="{{ 'on' if active == 'corpus' }}" {{ 'aria-current=page' if active == 'corpus' }}>Corpus</a>
+      <a href="/reports" class="{{ 'on' if active == 'reports' }}" {{ 'aria-current=page' if active == 'reports' }}>Reports</a>
+      <a href="/settings" class="{{ 'on' if active == 'settings' }}" {{ 'aria-current=page' if active == 'settings' }}>Settings</a>
+    </nav>
+  </header>
+  <main id="main" class="content">
+    {% block content %}{% endblock %}
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

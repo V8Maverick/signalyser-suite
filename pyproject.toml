@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "signalyser-suite"
+version = "0.2.0"
+description = "Local-first market-intelligence suite for Product Marketing (CLI + web)"
+requires-python = ">=3.10"
+# Runtime dependencies are managed via requirements.txt (and per-tool
+# requirements.txt). This editable install exists so `import signalyser_core`
+# (and signalyser_web) resolves no matter which directory a tool is launched
+# from — the tools are run as subprocesses from various working dirs.
+dependencies = []
+
+[tool.setuptools]
+# Flat layout: ship the two first-party packages. `tools/` is intentionally NOT
+# a package — each tool is a standalone script run by path.
+packages = ["signalyser_core", "signalyser_web"]

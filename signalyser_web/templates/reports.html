@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Reports <span class="muted">outputs/</span></h1>
+<p class="muted">Generated reports, charts, and assets. Newest first.</p>
+
+{% if not reports %}
+  <div class="empty-state">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <path d="M14 3v5h5M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <path d="M8 13h8M8 17h5"/>
+    </svg>
+    <h3>No reports yet</h3>
+    <p>Run a synthesis or generation tool on the <a href="/tools">Tools</a> page to produce a report.</p>
+  </div>
+{% else %}
+  <ul class="file-list">
+    {% for r in reports %}
+      <li>
+        {% if r.is_image %}
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+          </svg>
+        {% else %}
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M14 3v5h5M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          </svg>
+        {% endif %}
+        <a href="/view?root=outputs&rel={{ r.rel }}">{{ r.rel }}</a>
+        <span class="size">{{ r.size }} B</span>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}

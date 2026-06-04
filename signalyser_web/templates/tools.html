@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+{% set cloud_no_key = settings.processor == 'cloud' and not settings.has_api_key %}
+<div class="backend-banner {{ 'is-warn' if cloud_no_key else ('is-cloud' if settings.processor == 'cloud' else '') }}">
+  <span class="dot" aria-hidden="true"></span>
+  <span>Backend: <strong>{{ settings.processor|capitalize }}</strong></span>
+  {% if settings.processor == 'cloud' %}
+    <span class="pill">{{ settings.model or 'no model' }}</span>
+    {% if not settings.has_api_key %}
+      <span class="warn">⚠ no API key set — runs will fall back or fail</span>
+    {% endif %}
+  {% endif %}
+  <span class="spacer"></span>
+  <a href="/settings" class="change">Change in Settings →</a>
+</div>
+
+<div class="layout">
+  <section class="tools-col" aria-label="Available tools">
+    {% for cat, label in category_labels.items() %}
+      {% if grouped.get(cat) %}
+        <h2 class="cat">{{ label }}</h2>
+        {% for tool in grouped[cat] %}
+          <form class="tool-card" data-tool="{{ tool.key }}" data-label="{{ tool.label }}" onsubmit="return runTool(event)">
+            <input type="hidden" name="tool" value="{{ tool.key }}">
+            <div class="tool-head">
+              <span class="tool-name">{{ tool.label }}</span>
+              {% if tool.source_id %}<span class="badge src">{{ tool.source_id }}</span>{% endif %}
+            </div>
+            <p class="tool-blurb">{{ tool.blurb }}</p>
+
+            {% if tool.needs_reddit_username and not settings.reddit_username %}
+              <div class="card-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/>
+                </svg>
+                <span>No Reddit username saved — <a href="/settings">set one in Settings</a> or fill the field below.</span>
+              </div>
+            {% endif %}
+
+            {% for f in tool.fields %}
+              <label class="field">
+                <span>{{ f.label }}{% if f.required %} <span class="req">*</span>{% endif %}</span>
+                <input type="{{ 'number' if f.type == 'number' else 'text' }}"
+                       name="{{ f.name }}" placeholder="{{ f.placeholder }}"
+                       value="{{ f.default }}" {% if f.required %}required{% endif %}>
+                {% if f.help %}<small>{{ f.help }}</small>{% endif %}
+              </label>
+            {% endfor %}
+
+            <button type="submit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Run
+            </button>
+          </form>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </section>
+
+  <section id="output-col" class="output-col" data-state="idle" aria-label="Run output">
+    <div class="output-head">
+      <span class="run-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="run-title">Output</span>
+      </span>
+      <span class="spacer"></span>
+      <span class="output-actions">
+        <button id="copy-btn" type="button" class="btn-ghost" hidden onclick="copyOutput()">Copy</button>
+        <button id="cancel-btn" type="button" hidden onclick="cancelRun()">Stop</button>
+      </span>
+    </div>
+    <pre id="output" class="output empty">Pick a tool and hit Run — live output streams here.</pre>
+  </section>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+{% endblock %}

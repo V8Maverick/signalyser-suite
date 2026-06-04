@@ -20,8 +20,13 @@ local/cloud, fallback, and the API-key flow stay consistent.
 ## Setup
 
 ```bash
-./setup.sh        # venv + deps
+./setup.sh        # venv + deps + editable install (pip install -e .)
 ```
+The suite is installed **editable** (`pip install -e .`, run by `setup.sh`) so
+`import signalyser_core` / `import signalyser_web` resolve from any cwd. This is
+required: tools are launched as subprocesses (by the launcher and the web app)
+and would otherwise fail with `ModuleNotFoundError: signalyser_core`.
+
 Local mode needs Ollama running (`ollama pull qwen3.5:9b`). Cloud mode needs
 `ANTHROPIC_API_KEY` — the tools prompt to paste one (saved to `.env`) or fall
 back to local. **Never hardcode or guess an API key.**
@@ -34,6 +39,9 @@ back to local. **Never hardcode or guess an API key.**
 - `tools/reddit/` is the original RedAlyser — **leave it unchanged**.
 - `signalyser.py` is the top-level launcher: `python signalyser.py <cmd> [args]`
   dispatches to a tool (page/jobs/tenk/youtube/personas/arc/quadrant/assets/reddit).
+- `signalyser_web/` is the web layer (FastAPI): `python -m signalyser_web` serves
+  a browser UI on http://localhost:8000 that runs each tool as a subprocess and
+  streams its output. It reuses the same `.env` / sticky `-p/-m` as the CLI.
 - Console output stays ASCII-only (no box-drawing chars) — the Windows cp1252
   console raises `UnicodeEncodeError` on them.
 

@@ -22,6 +22,11 @@ echo "==> Upgrading pip"
 echo "==> Installing core dependencies"
 .venv/bin/python -m pip install --quiet -r requirements.txt
 
+# Editable install of the suite itself, so every tool, the launcher, and the web
+# app resolve `import signalyser_core` from any cwd (subprocess tool runs need it).
+echo "==> Installing the suite (editable: pip install -e .)"
+.venv/bin/python -m pip install --quiet -e .
+
 # Install any per-tool requirements too.
 for req in tools/*/requirements.txt; do
   [ -f "$req" ] || continue
@@ -42,7 +47,9 @@ Next:
        ollama pull qwen3.5:9b
   2. Run a tool, e.g.:
        .venv/bin/python tools/job_postings/analyse.py notion
-  3. Cloud mode (optional): add -p cloud -m sonnet-4.6 (needs ANTHROPIC_API_KEY)
+  3. Or launch the web UI (browser forms + live streaming):
+       .venv/bin/python -m signalyser_web    # http://localhost:8000
+  4. Cloud mode (optional): add -p cloud -m sonnet-4.6 (needs ANTHROPIC_API_KEY)
 
 The reddit tool (tools/reddit/) is self-contained — see its own README.
 EOF

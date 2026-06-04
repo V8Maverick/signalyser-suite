@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Intel Corpus <span class="muted">inputs/</span></h1>
+<p class="muted">The shared signal corpus the synthesis tools read. One file per source per company.</p>
+
+{% if not companies %}
+  <div class="empty-state">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+    </svg>
+    <h3>No intel yet</h3>
+    <p>Run a collector on the <a href="/tools">Tools</a> page to gather signals about a company.</p>
+  </div>
+{% else %}
+  {% for c in companies %}
+    <div class="corpus-group">
+      <h2>{{ c.company }} <span class="count">{{ c.files|length }} file{{ 's' if c.files|length != 1 }}</span></h2>
+      <ul class="file-list">
+        {% for f in c.files %}
+          <li>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M14 3v5h5M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            </svg>
+            <a href="/view?root=inputs&rel={{ f.name }}">{{ f.name }}</a>
+            {% if f.suffix %}<span class="badge">{{ f.suffix }}</span>{% endif %}
+            <span class="size">{{ f.size }} B</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endfor %}
+{% endif %}
+{% endblock %}

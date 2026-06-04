@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Settings</h1>
+<p class="muted">Choose how runs are processed and provide the credentials each backend needs.</p>
+
+{% if saved %}
+  <p class="saved">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+    Settings saved.
+  </p>
+{% endif %}
+
+<form method="post" action="/settings" class="settings-form">
+  <label class="field">
+    <span>Processing backend</span>
+    <select name="processor">
+      <option value="local" {{ 'selected' if settings.processor == 'local' }}>Local (Ollama / Qwen)</option>
+      <option value="cloud" {{ 'selected' if settings.processor == 'cloud' }}>Cloud (Anthropic / Claude)</option>
+    </select>
+    <small>Local runs on this machine via Ollama ({{ settings.ollama_host or 'default host' }}). Cloud uses the Anthropic API.</small>
+  </label>
+
+  <label class="field">
+    <span>Cloud model</span>
+    <select name="model">
+      <option value="">— pick one —</option>
+      {% for key, label in settings.model_choices %}
+        <option value="{{ key }}" {{ 'selected' if settings.model == key }}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <small>Only used for Cloud processing.</small>
+  </label>
+
+  <label class="field">
+    <span>Anthropic API key</span>
+    <input type="password" name="api_key" autocomplete="off"
+           placeholder="{{ 'key on file — leave blank to keep' if settings.has_api_key else 'sk-ant-...' }}">
+    <small>{% if settings.has_api_key %}A key is saved. Type a new one to replace it.{% else %}Required for Cloud processing.{% endif %}</small>
+  </label>
+
+  <label class="field">
+    <span>Reddit username</span>
+    <input type="text" name="reddit_username" value="{{ settings.reddit_username }}"
+           placeholder="your_reddit_handle">
+    <small>Required by the Reddit tool (sent in its User-Agent).</small>
+  </label>
+
+  <button type="submit">Save settings</button>
+</form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ view.name }} · Signalyser{% endblock %}
+{% block content %}
+<a href="/{{ 'corpus' if view.root == 'inputs' else 'reports' }}" class="muted back-link">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  Back to {{ 'Corpus' if view.root == 'inputs' else 'Reports' }}
+</a>
+<h1>{{ view.name }}</h1>
+{% if view.kind == 'image' %}
+  <img class="report-image" src="/raw?root={{ view.root }}&rel={{ view.rel }}" alt="{{ view.name }}">
+{% else %}
+  <article class="markdown">{{ view.html|safe }}</article>
+{% endif %}
+{% endblock %}
