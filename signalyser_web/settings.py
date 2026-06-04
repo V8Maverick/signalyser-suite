@@ -14,6 +14,22 @@ from signalyser_core.processing import CLOUD_MODELS, CLOUD_MODEL_LABELS
 # Re-exported so templates can render the model dropdown from one source.
 MODEL_CHOICES: list[tuple[str, str]] = list(CLOUD_MODEL_LABELS.items())
 
+UI_VERSIONS = ("v1", "v2")
+
+
+def ui_version() -> str:
+    """Which front-end design is active (sticky in .env). Defaults to v2."""
+    v = (os.getenv("UI_VERSION") or "v2").strip().lower()
+    return v if v in UI_VERSIONS else "v2"
+
+
+def set_ui_version(v: str) -> str:
+    v = (v or "").strip().lower()
+    if v not in UI_VERSIONS:
+        v = "v2"
+    set_env_var("UI_VERSION", v)
+    return v
+
 
 def get_settings() -> dict:
     """Current sticky settings. The API key is never returned — only whether set."""

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Signal Desk · Signalyser{% endblock %}
+{% block content %}
+<div class="deck">
+  <div class="deck-main">
+    <header class="deck-head">
+      <p class="eyebrow">Market-intelligence workspace</p>
+      <h1 class="deck-title">Signal <em>Desk</em></h1>
+      <p class="deck-sub">Collect public signal, then synthesise it into positioning, personas and
+        ready-to-ship assets — local by default, cloud on demand.</p>
+    </header>
+
+    <section class="step reveal" style="--i:1">
+      <div class="step-rail"><span class="step-no">01</span><span class="step-line"></span></div>
+      <div class="step-body">
+        <h2 class="step-title">Intake <span>· decode competitor sites</span></h2>
+        <p class="step-lede">Paste one or more URLs — commas or new lines. Each is decoded into this
+          session's corpus, one after another. Batch a whole competitive set in a single pass.</p>
+        <textarea id="intake-urls" rows="3"
+          placeholder="https://www.notion.com,  https://linear.app,  https://www.airtable.com"></textarea>
+        <div class="step-actions">
+          <button id="intake-run" class="btn-primary" data-busy-label="Running intake…">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            Run intake
+          </button>
+          <span id="intake-progress" class="run-note"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="step reveal" style="--i:2">
+      <div class="step-rail"><span class="step-no">02</span><span class="step-line"></span></div>
+      <div class="step-body">
+        <h2 class="step-title">Analyse <span>· synthesise by company</span></h2>
+        <p class="step-lede">Name a company already in the corpus, then run a synthesis tool over
+          everything collected about it.</p>
+        <input id="company" class="company-input" type="text" placeholder="company — e.g. notion"
+               autocomplete="off" spellcheck="false">
+        {% if companies %}
+        <div class="chips">
+          <span class="chips-label">In corpus</span>
+          {% for c in companies %}
+            <button type="button" class="company-chip" data-company="{{ c.company }}">
+              {{ c.company }}<span class="chip-n">{{ c.files|length }}</span>
+            </button>
+          {% endfor %}
+          <a href="/tools" class="chip-refresh" title="Reload corpus" aria-label="Reload">&#8635;</a>
+        </div>
+        {% else %}
+        <p class="empty-hint">No companies in this session yet — run an intake above first.</p>
+        {% endif %}
+        <div class="tool-buttons">
+          <button type="button" class="analyse-btn" data-tool="personas" data-needs="company">Personas</button>
+          <button type="button" class="analyse-btn" data-tool="arc" data-needs="company">Positioning&nbsp;Arc</button>
+          <button type="button" class="analyse-btn" data-tool="assets" data-needs="company">Written&nbsp;Assets</button>
+        </div>
+        <button type="button" id="quadrant-run" class="corpuswide-btn" data-tool="quadrant">
+          <span>Competitive Quadrant</span>
+          <small>plots the whole corpus · needs ≥2 companies</small>
+        </button>
+      </div>
+    </section>
+
+    <section class="step reveal" style="--i:3">
+      <div class="step-rail"><span class="step-no">03</span></div>
+      <div class="step-body">
+        <h2 class="step-title">Instruments <span>· standalone collectors</span></h2>
+        <p class="step-lede">Extra signal sources that aren't company-website based.</p>
+        <div class="instruments">
+          <div class="instrument">
+            <div class="inst-head"><span class="inst-glyph">r/</span><h3>Reddit signal</h3></div>
+            <div class="inst-row">
+              <input id="reddit-sub" placeholder="subreddit — e.g. devops" autocomplete="off">
+              <input id="reddit-num" type="number" value="15" min="1" class="num" title="posts">
+            </div>
+            {% if not settings.reddit_username %}
+              <small class="warn-inline">No Reddit username — set one in <a href="/settings">Settings</a>.</small>
+            {% endif %}
+            <button type="button" class="inst-run" data-tool="reddit" data-field="subreddit:reddit-sub,num:reddit-num">Mine subreddit</button>
+          </div>
+          <div class="instrument">
+            <div class="inst-head"><span class="inst-glyph">▶</span><h3>YouTube summary</h3></div>
+            <div class="inst-row">
+              <input id="yt-url" placeholder="https://youtu.be/…" autocomplete="off">
+            </div>
+            <button type="button" class="inst-run" data-tool="youtube" data-field="url:yt-url">Summarise video</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <aside class="deck-console" id="v2-console-col" data-state="idle">
+    <div class="console-head">
+      <span class="console-dot" aria-hidden="true"></span>
+      <span id="v2-status">Console</span>
+      <span class="spacer"></span>
+      <button type="button" id="v2-copy" class="mini" hidden>copy</button>
+      <button type="button" id="v2-cancel" class="mini danger" hidden>stop</button>
+      <button type="button" id="v2-clear" class="mini">clear</button>
+    </div>
+    <pre id="v2-console" class="console empty">Idle.
+
+Run a step on the left — the model's output streams here, live.</pre>
+    <a href="/settings" class="console-foot">
+      <span class="backend-pill {{ 'is-cloud' if settings.processor == 'cloud' }}">
+        <span class="pill-dot"></span>
+        {{ settings.processor|capitalize }}{% if settings.processor == 'cloud' %} · {{ settings.model or 'no model' }}{% endif %}
+      </span>
+      <span class="cfg">configure &rarr;</span>
+    </a>
+  </aside>
+</div>
+{% endblock %}

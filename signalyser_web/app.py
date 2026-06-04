@@ -43,18 +43,26 @@ def create_app() -> FastAPI:
 
     @app.get("/tools", response_class=HTMLResponse)
     def tools_page(request: Request):
-        return TEMPLATES.TemplateResponse(request, "tools.html", {
+        ui = settings_mod.ui_version()
+        ctx = {
             "active": "tools",
+            "ui": ui,
             "session": sessions_mod.current(),
             "grouped": _tools_by_category(),
             "category_labels": CATEGORY_LABELS,
             "settings": settings_mod.get_settings(),
-        })
+        }
+        if ui == "v2":
+            ctx["companies"] = corpus_mod.list_inputs()
+            ctx["tools"] = TOOLS
+            return TEMPLATES.TemplateResponse(request, "dashboard.html", ctx)
+        return TEMPLATES.TemplateResponse(request, "tools.html", ctx)
 
     @app.get("/corpus", response_class=HTMLResponse)
     def corpus_page(request: Request):
         return TEMPLATES.TemplateResponse(request, "corpus.html", {
             "active": "corpus",
+            "ui": settings_mod.ui_version(),
             "session": sessions_mod.current(),
             "companies": corpus_mod.list_inputs(),
         })
@@ -63,6 +71,7 @@ def create_app() -> FastAPI:
     def reports_page(request: Request):
         return TEMPLATES.TemplateResponse(request, "reports.html", {
             "active": "reports",
+            "ui": settings_mod.ui_version(),
             "session": sessions_mod.current(),
             "reports": corpus_mod.list_outputs(),
         })
@@ -74,6 +83,7 @@ def create_app() -> FastAPI:
             return HTMLResponse("<h1>404</h1><p>File not found.</p>", status_code=404)
         return TEMPLATES.TemplateResponse(request, "view.html", {
             "active": "corpus" if root == "inputs" else "reports",
+            "ui": settings_mod.ui_version(),
             "session": sessions_mod.current(),
             "view": view,
         })
@@ -82,6 +92,7 @@ def create_app() -> FastAPI:
     def sessions_page(request: Request):
         return TEMPLATES.TemplateResponse(request, "sessions.html", {
             "active": "sessions",
+            "ui": settings_mod.ui_version(),
             "session": sessions_mod.current(),
             "sessions": sessions_mod.list_sessions(),
         })
@@ -97,6 +108,7 @@ def create_app() -> FastAPI:
     def settings_page(request: Request, saved: int = 0):
         return TEMPLATES.TemplateResponse(request, "settings.html", {
             "active": "settings",
+            "ui": settings_mod.ui_version(),
             "session": sessions_mod.current(),
             "settings": settings_mod.get_settings(),
             "saved": bool(saved),
@@ -171,6 +183,12 @@ def create_app() -> FastAPI:
         form = dict(await request.form())
         sessions_mod.delete(str(form.get("name") or ""))
         return RedirectResponse(url="/sessions", status_code=303)
+
+    @app.get("/ui/{version}")
+    def switch_ui(version: str, request: Request):
+        settings_mod.set_ui_version(version)
+        back = request.headers.get("referer") or "/tools"
+        return RedirectResponse(url=back, status_code=303)
 
     return app
 
