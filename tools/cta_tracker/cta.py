@@ -257,6 +257,11 @@ def main() -> None:
           + (f"   (ours: {own_display})" if own_display else "   (no 'our company' set)") + "\n")
     print("=" * 70)
 
+    # Local models have a small context window — trim the corpus so it fits (cloud
+    # gets the full thing). Without this, a multi-company corpus overflows and the
+    # local model returns nothing.
+    combined = sc.fit_corpus_for_local(combined, processor)
+
     # Tag is_own in the prompt by passing the display name; the model echoes it back,
     # but we also enforce it after parsing so the plot/report are correct.
     raw = sc.analyze(
@@ -269,7 +274,14 @@ def main() -> None:
     try:
         data = parse_response(raw)
     except (json.JSONDecodeError, ValueError) as e:
-        print(f"Failed to parse model response as CTA JSON: {e}\n\nRaw model output:\n{raw}")
+        if not raw.strip():
+            print(
+                "The model returned no output. On local processing this usually means "
+                "the corpus is still too large for the model's context — try a smaller "
+                "--companies subset, raise OLLAMA_NUM_CTX, or run on cloud (-p cloud)."
+            )
+        else:
+            print(f"Failed to parse model response as CTA JSON: {e}\n\nRaw model output:\n{raw}")
         sys.exit(1)
 
     # Enforce the is_own flag from our own setting (don't trust the model).

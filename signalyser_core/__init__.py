@@ -18,7 +18,7 @@ from .processing import (
     DEFAULT_LOCAL_MODEL,
 )
 from .cli import add_processing_args, print_backend
-from .chunking import analyze_large
+from .chunking import analyze_large, fit_corpus_for_local
 from .io import (
     slugify,
     save_report,
@@ -48,7 +48,7 @@ __all__ = [
     "analyze", "analyze_with_ollama", "analyze_with_cloud", "resolve_processing",
     "ModelUnavailable", "CLOUD_MODELS", "CLOUD_MODEL_LABELS", "CLOUD_MAX_TOKENS",
     "LOCAL_MODELS", "DEFAULT_LOCAL_MODEL",
-    "add_processing_args", "print_backend", "analyze_large",
+    "add_processing_args", "print_backend", "analyze_large", "fit_corpus_for_local",
     "slugify", "save_report", "save_intel", "intel_path", "read_company_intel",
     "SOURCE_IDS", "INPUTS_DIR", "OUTPUTS_DIR", "SUITE_ROOT",
     "SESSIONS_ROOT", "DEFAULT_SESSION", "active_session", "set_active_session",

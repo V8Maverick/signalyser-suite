@@ -70,7 +70,8 @@ def _stream_chat(model: str, messages: list[dict]) -> str:
         "model": model,
         "stream": True,
         "messages": messages,
-        "options": {"temperature": 0.4, "num_ctx": 8192},
+        "options": {"temperature": 0.4,
+                    "num_ctx": int(os.getenv("OLLAMA_NUM_CTX", "8192"))},
     }
     chunks: list[str] = []
     with requests.post(url, json=payload, stream=True, timeout=600) as resp:

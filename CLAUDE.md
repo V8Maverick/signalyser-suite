@@ -65,6 +65,12 @@ back to local. **Never hardcode or guess an API key.**
 - `signalyser_web/` is the web layer (FastAPI): `python -m signalyser_web` serves
   a browser UI on http://localhost:8000 that runs each tool as a subprocess and
   streams its output. It reuses the same `.env` / sticky `-p/-m` as the CLI.
+- Corpus-wide tools (quadrant, cta_tracker) send the whole corpus in one prompt.
+  Local models have a small context (`num_ctx`, env `OLLAMA_NUM_CTX`, default 8192),
+  so they call `sc.fit_corpus_for_local(combined, processor)` first to trim the
+  corpus to `LOCAL_CORPUS_BUDGET` chars (cloud is untouched) — otherwise a multi-
+  company corpus overflows and the local model returns empty output. These
+  structured-JSON tools are best on cloud; local is a trimmed, lossier fallback.
 - Console output stays ASCII-only (no box-drawing chars) — the Windows cp1252
   console raises `UnicodeEncodeError` on them.
 

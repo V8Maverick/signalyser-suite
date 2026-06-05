@@ -263,6 +263,10 @@ def main() -> None:
         sys.exit(1)
     print(f"Companies: {', '.join(combined)}\n")
 
+    # Trim the corpus for local models so it fits their context window (cloud
+    # gets the full corpus). Prevents the local model returning nothing on big sets.
+    combined = sc.fit_corpus_for_local(combined, processor)
+
     raw = sc.analyze(
         SYSTEM_PROMPT,
         build_user_prompt(combined),

@@ -100,6 +100,16 @@ else:
     os.environ["OLLAMA_MODEL"] = _orig_ollama
 check("both local models valid + labelled", set(sc.LOCAL_MODELS) == {"qwen3.6:35b-a3b", "qwen3.5:9b"})
 
+# 11. Local corpus trimming — stops a big multi-company corpus overflowing the
+#     local context (the CTA tracker failed with empty output before this).
+_big = {"a": "x" * 20000, "b": "y" * 20000}
+check("cloud corpus untrimmed", sc.fit_corpus_for_local(_big, "cloud") == _big)
+_trimmed = sc.fit_corpus_for_local(_big, "local", char_budget=6000)
+check("local big corpus trimmed down",
+      sum(len(v) for v in _trimmed.values()) < sum(len(v) for v in _big.values()))
+_small = {"a": "short", "b": "also short"}
+check("local small corpus untouched", sc.fit_corpus_for_local(_small, "local", char_budget=6000) == _small)
+
 print()
 if failures:
     print(f"{len(failures)} FAILED: {failures}"); sys.exit(1)
