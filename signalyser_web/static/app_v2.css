@@ -191,6 +191,7 @@ body.ui-v2 .opp-row button {
 }
 body.ui-v2 .opp-row button:hover { filter: brightness(1.06); }
 body.ui-v2 .cta-own { display: block; margin-top: .5rem; font-size: .78rem; color: var(--muted); }
+body.ui-v2 .cta-own strong { color: var(--signal); }
 body.ui-v2 .own-form { display: flex; align-items: center; gap: .5rem; margin-top: .7rem; flex-wrap: wrap; }
 body.ui-v2 .own-label { font-size: .68rem; color: var(--muted); font-family: var(--mono); line-height: 1.2; }
 body.ui-v2 .own-label em { color: var(--signal); font-style: normal; }

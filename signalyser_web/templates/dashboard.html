@@ -64,7 +64,9 @@
             <input name="own_company" value="{{ own_company }}" placeholder="e.g. photobox" autocomplete="off">
             <button type="submit">Set</button>
           </form>
-          {% if not own_company %}
+          {% if own_company %}
+            <small class="cta-own">✓ Analysing as <strong>{{ own_company }}</strong> — everyone else is a competitor.</small>
+          {% else %}
             <small class="cta-own">No company set yet — everyone is treated as a competitor.</small>
           {% endif %}
         </div>

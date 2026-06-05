@@ -50,6 +50,16 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Signalyser Suite")
     app.mount("/static", StaticFiles(directory=str(_HERE / "static")), name="static")
 
+    @app.middleware("http")
+    async def no_store_html(request: Request, call_next):
+        # Never let the browser serve a stale HTML page — state (active session,
+        # our-company, corpus) changes between requests. Static assets keep their
+        # own caching via the ?v= buster.
+        response = await call_next(request)
+        if response.headers.get("content-type", "").startswith("text/html"):
+            response.headers["Cache-Control"] = "no-store"
+        return response
+
     # ── Pages ────────────────────────────────────────────────────────────────
     @app.get("/", include_in_schema=False)
     def index():
