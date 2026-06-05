@@ -25,6 +25,20 @@ _HERE = Path(__file__).resolve().parent
 TEMPLATES = Jinja2Templates(directory=str(_HERE / "templates"))
 
 
+def _asset_ver() -> str:
+    """Cache-buster for static assets: newest mtime in static/ (changes on edit)."""
+    try:
+        mtimes = [p.stat().st_mtime for p in (_HERE / "static").glob("*")]
+        return str(int(max(mtimes))) if mtimes else "0"
+    except OSError:
+        return "0"
+
+
+# Made available to every template; appended to /static links so a browser never
+# serves a stale stylesheet/script after the files change.
+TEMPLATES.env.globals["asset_ver"] = _asset_ver()
+
+
 def _tools_by_category() -> dict[str, list]:
     grouped: dict[str, list] = {cat: [] for cat in CATEGORY_LABELS}
     for tool in TOOLS.values():

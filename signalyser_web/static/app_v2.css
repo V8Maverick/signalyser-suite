@@ -150,15 +150,15 @@ body.ui-v2 .analyse-btn {
 }
 body.ui-v2 .analyse-btn:hover { filter: brightness(1.06); }
 body.ui-v2 .analyse-btn:active { transform: translateY(1px); }
-body.ui-v2 .quad-row { display: flex; align-items: center; gap: .7rem; margin-top: .7rem; flex-wrap: wrap; }
-body.ui-v2 .quad-btn {
-  background: var(--signal); color: #1a1406; border: 0; border-radius: 9px;
-  padding: .55rem 1.05rem; font-family: var(--body); font-weight: 700; font-size: .9rem; cursor: pointer;
+body.ui-v2 .corpuswide-btn {
+  display: inline-flex; flex-direction: column; align-items: flex-start; gap: .05rem; margin-top: .9rem;
+  background: var(--signal); color: #1a1406; border: 0; border-radius: 10px; padding: .5rem .95rem;
+  font-family: var(--body); font-weight: 700; font-size: .92rem; cursor: pointer; text-align: left;
   box-shadow: 0 6px 22px -12px rgba(231,179,61,.7); transition: filter .15s, transform .1s;
 }
-body.ui-v2 .quad-btn:hover { filter: brightness(1.06); }
-body.ui-v2 .quad-btn:active { transform: translateY(1px); }
-body.ui-v2 .quad-note { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+body.ui-v2 .corpuswide-btn:hover { filter: brightness(1.06); }
+body.ui-v2 .corpuswide-btn:active { transform: translateY(1px); }
+body.ui-v2 .corpuswide-btn small { font-family: var(--mono); font-weight: 500; font-size: .66rem; color: rgba(26,20,6,.72); }
 
 /* chips */
 body.ui-v2 .chips { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; margin: .2rem 0 0; }
