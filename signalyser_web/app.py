@@ -183,6 +183,7 @@ def create_app() -> FastAPI:
         settings_mod.update_settings(
             processor=str(form.get("processor") or "") or None,
             model=str(form.get("model") or "") or None,
+            local_model=str(form.get("local_model") or "") or None,
             api_key=str(form.get("api_key") or "") or None,
             reddit_username=(str(form["reddit_username"])
                              if "reddit_username" in form else None),

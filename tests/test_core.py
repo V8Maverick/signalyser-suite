@@ -86,6 +86,20 @@ check("haiku id", sc.CLOUD_MODELS["haiku-4.5"] == "claude-haiku-4-5")
 check("slugify", sc.slugify("Acme Corp! Inc.") == "acme-corp-inc")
 check("intel_path naming", sc.intel_path("Acme Corp", "004").name == "acme-corp-004.md")
 
+# 10. Local model selection — choosing the 9B means NO 35B attempt; the 35B keeps
+#     the 9B as automatic fallback. (Why the user wants it: the 35B can OOM-crash.)
+import signalyser_core.processing as _proc
+_orig_ollama = os.environ.get("OLLAMA_MODEL")
+os.environ["OLLAMA_MODEL"] = "qwen3.5:9b"
+check("force 9B -> only 9B (no 35B attempt)", _proc._ollama_models() == ["qwen3.5:9b"])
+os.environ["OLLAMA_MODEL"] = "qwen3.6:35b-a3b"
+check("35B -> 35B then 9B fallback", _proc._ollama_models() == ["qwen3.6:35b-a3b", "qwen3.5:9b"])
+if _orig_ollama is None:
+    os.environ.pop("OLLAMA_MODEL", None)
+else:
+    os.environ["OLLAMA_MODEL"] = _orig_ollama
+check("both local models valid + labelled", set(sc.LOCAL_MODELS) == {"qwen3.6:35b-a3b", "qwen3.5:9b"})
+
 print()
 if failures:
     print(f"{len(failures)} FAILED: {failures}"); sys.exit(1)

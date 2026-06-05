@@ -21,6 +21,17 @@
   </label>
 
   <label class="field">
+    <span>Local model</span>
+    <select name="local_model">
+      {% for key, label in settings.local_model_choices %}
+        <option value="{{ key }}" {{ 'selected' if settings.local_model == key }}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <small>Used for Local processing. Pick the 9B if the 35B crashes your machine —
+      some computers report enough RAM for the 35B but can't actually run it.</small>
+  </label>
+
+  <label class="field">
     <span>Cloud model</span>
     <select name="model">
       <option value="">— pick one —</option>

@@ -9,10 +9,13 @@ from __future__ import annotations
 import os
 
 from signalyser_core.env import load_env, set_env_var
-from signalyser_core.processing import CLOUD_MODELS, CLOUD_MODEL_LABELS
+from signalyser_core.processing import (
+    CLOUD_MODELS, CLOUD_MODEL_LABELS, LOCAL_MODELS, DEFAULT_LOCAL_MODEL,
+)
 
-# Re-exported so templates can render the model dropdown from one source.
+# Re-exported so templates can render the model dropdowns from one source.
 MODEL_CHOICES: list[tuple[str, str]] = list(CLOUD_MODEL_LABELS.items())
+LOCAL_MODEL_CHOICES: list[tuple[str, str]] = list(LOCAL_MODELS.items())
 
 UI_VERSIONS = ("v1", "v2")
 
@@ -38,17 +41,21 @@ def get_settings() -> dict:
     if processor not in ("local", "cloud"):
         processor = "local"
     model = (os.getenv("CLOUD_MODEL") or "").strip().lower()
+    local_model = (os.getenv("OLLAMA_MODEL") or "").strip()
     return {
         "processor": processor,
         "model": model if model in CLOUD_MODELS else "",
+        "local_model": local_model if local_model in LOCAL_MODELS else DEFAULT_LOCAL_MODEL,
         "has_api_key": bool(os.getenv("ANTHROPIC_API_KEY")),
         "reddit_username": os.getenv("REDDIT_USERNAME") or "",
         "ollama_host": os.getenv("OLLAMA_HOST") or "http://localhost:11434",
         "model_choices": MODEL_CHOICES,
+        "local_model_choices": LOCAL_MODEL_CHOICES,
     }
 
 
 def update_settings(*, processor: str | None = None, model: str | None = None,
+                    local_model: str | None = None,
                     api_key: str | None = None,
                     reddit_username: str | None = None) -> list[str]:
     """Persist any provided settings to .env. Returns a list of validation errors.
@@ -70,6 +77,12 @@ def update_settings(*, processor: str | None = None, model: str | None = None,
             errors.append(f"Unknown cloud model: {model!r}")
         else:
             set_env_var("CLOUD_MODEL", model)
+
+    if local_model:
+        if local_model not in LOCAL_MODELS:
+            errors.append(f"Unknown local model: {local_model!r}")
+        else:
+            set_env_var("OLLAMA_MODEL", local_model)
 
     if api_key:
         set_env_var("ANTHROPIC_API_KEY", api_key.strip())

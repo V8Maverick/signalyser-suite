@@ -1,7 +1,8 @@
 """Shared CLI wiring so every tool gets identical -p/-m flags and status line."""
+import os
 import argparse
 
-from .processing import CLOUD_MODEL_LABELS
+from .processing import CLOUD_MODEL_LABELS, DEFAULT_LOCAL_MODEL
 
 
 def add_processing_args(parser: argparse.ArgumentParser) -> None:
@@ -23,4 +24,4 @@ def print_backend(processor: str, model_key: str | None) -> None:
     if processor == "cloud":
         print(f"Using Cloud Processing with model {CLOUD_MODEL_LABELS[model_key]}")
     else:
-        print("Using Local Processing with model QWEN")
+        print(f"Using Local Processing with model {os.getenv('OLLAMA_MODEL', DEFAULT_LOCAL_MODEL)}")

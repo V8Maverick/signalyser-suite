@@ -92,8 +92,11 @@ Every tool takes the same flags, shared from the core:
 -m, --model       Opus-4.8 | Sonnet-4.6 | Haiku-4.5   # cloud only
 ```
 
-- **Local (default):** Ollama, primary `qwen3.6:35b-a3b` with automatic fallback
-  to `qwen3.5:9b`. Free, private, offline.
+- **Local (default):** Ollama, `qwen3.6:35b-a3b` with automatic fallback to
+  `qwen3.5:9b`. Free, private, offline. Pick the model in the **Settings** tab
+  (sticky `OLLAMA_MODEL`) — choose the **9B** if the 35B crashes your machine
+  (some report enough RAM for the 35B but can't actually run it); choosing 9B
+  skips the 35B attempt entirely.
 - **Cloud:** Anthropic API; needs `ANTHROPIC_API_KEY` (the tool offers to save a
   pasted key to `.env`, else falls back to local).
 - Large inputs (10-K, long pages): cloud analyzes in one pass; local map-reduces

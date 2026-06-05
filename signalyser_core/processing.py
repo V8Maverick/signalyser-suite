@@ -27,6 +27,17 @@ CLOUD_MODEL_LABELS = {
 }
 CLOUD_MAX_TOKENS = 8192
 
+# ── Local (Ollama) models ─────────────────────────────────────────────────────
+# Selectable via OLLAMA_MODEL. The 35B is faster but needs more *usable* RAM —
+# some machines report enough free RAM yet OOM-crash when it actually loads, so
+# the 9B is the safe deliberate choice there. Picking the 9B means no 35B attempt
+# at all (it's also the automatic fallback when the 35B can't start).
+LOCAL_MODELS = {
+    "qwen3.6:35b-a3b": "Qwen3.6 35B — faster, needs plenty of free RAM",
+    "qwen3.5:9b": "Qwen3.5 9B — lighter, safe on modest machines",
+}
+DEFAULT_LOCAL_MODEL = "qwen3.6:35b-a3b"
+
 
 def _ollama_host() -> str:
     return os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
