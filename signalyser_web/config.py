@@ -103,6 +103,19 @@ TOOLS: dict[str, Tool] = {
         blurb="Plot a data-driven competitive quadrant (needs >=2 companies in the corpus).",
         fields=(),  # defaults to the suite inputs/ folder
     ),
+    "cta": Tool(
+        key="cta", label="CTA Tracker", script="tools/cta_tracker/cta.py",
+        category="synthesis", source_id=None,
+        blurb="Heatmap of call-to-action intensity across the corpus — us vs competitors, USPs.",
+        fields=(
+            ToolField("companies", "Companies", "option", flag="--companies",
+                      placeholder="all in corpus (or a,b,c)",
+                      help="Optional comma-separated subset; defaults to everything."),
+            ToolField("own", "Our company", "option", flag="--own",
+                      placeholder="defaults to the Settings value",
+                      help="Which company is ours; the rest are competitors."),
+        ),
+    ),
     "assets": Tool(
         key="assets", label="Written Asset Generator", script="tools/assets/assets.py",
         category="generation", source_id=None,

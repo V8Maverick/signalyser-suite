@@ -175,6 +175,7 @@ def create_app() -> FastAPI:
             api_key=str(form.get("api_key") or "") or None,
             reddit_username=(str(form["reddit_username"])
                              if "reddit_username" in form else None),
+            own_company=(str(form["own_company"]) if "own_company" in form else None),
         )
         return RedirectResponse(url="/settings?saved=1", status_code=303)
 

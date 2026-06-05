@@ -118,6 +118,13 @@
       runOne("opportunities", { company, subreddit: sub }, "Opportunity scan · " + company + " × r/" + sub);
     });
 
+    const cta = el("cta-run");
+    if (cta) cta.addEventListener("click", () => {
+      const companies = (el("cta-companies").value || "").trim();
+      const fields = companies ? { companies } : {};
+      runOne("cta", fields, "CTA Tracker" + (companies ? " · " + companies : ""));
+    });
+
     document.querySelectorAll(".inst-run").forEach((b) => {
       b.addEventListener("click", () => {
         const map = (b.dataset.field || "").split(",").map((s) => s.split(":"));

@@ -26,6 +26,7 @@ tools/
   personas/             # 009 intel -> evidence-based buyer personas
   positioning_arc/      # 008 intel -> 3-horizon positioning arc
   quadrant/             # 007 intel -> competitive quadrant chart
+  cta_tracker/          # 012 corpus -> CTA intensity heatmap (us vs competitors)
   assets/               # 010 personas + positioning -> written assets (reflection loop)
   opportunities/        # 011 company corpus x subreddit -> opportunities + SEO keywords
 sessions/               # named workspaces: <name>/{inputs,outputs} (gitignored)

@@ -45,6 +45,14 @@
     <small>Required by the Reddit tool (sent in its User-Agent).</small>
   </label>
 
+  <label class="field">
+    <span>Our company</span>
+    <input type="text" name="own_company" value="{{ settings.own_company }}"
+           placeholder="e.g. photobox">
+    <small>The company you work for — everyone else in the corpus is treated as a
+      competitor (used by the CTA Tracker for us-vs-them analysis).</small>
+  </label>
+
   <button type="submit">Save settings</button>
 </form>
 {% endblock %}

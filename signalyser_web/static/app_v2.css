@@ -185,11 +185,13 @@ body.ui-v2 .opp-head h3 { font-family: var(--display); font-weight: 500; font-si
 body.ui-v2 .opp-head p { margin: 0; font-size: .85rem; max-width: 52ch; }
 body.ui-v2 .opp-row { display: flex; gap: .5rem; margin-top: .8rem; }
 body.ui-v2 .opp-row input { flex: 1; }
-body.ui-v2 #opp-run {
+body.ui-v2 .opp-row button {
   background: var(--signal); color: #1a1406; border: 0; border-radius: 9px; padding: .55rem 1rem;
   font-family: var(--body); font-weight: 700; font-size: .9rem; cursor: pointer; white-space: nowrap;
 }
-body.ui-v2 #opp-run:hover { filter: brightness(1.06); }
+body.ui-v2 .opp-row button:hover { filter: brightness(1.06); }
+body.ui-v2 .cta-own { display: block; margin-top: .5rem; font-size: .8rem; color: var(--muted); }
+body.ui-v2 .cta-own strong { color: var(--signal); }
 
 /* instruments */
 body.ui-v2 .instruments { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: .4rem; }

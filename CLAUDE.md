@@ -52,6 +52,10 @@ back to local. **Never hardcode or guess an API key.**
 - `tools/opportunities/` (011) cross-references a company's corpus with subreddit
   signal (via `signalyser_core.reddit`) → actionable opportunities + SEO keywords,
   saved as a report + `inputs/<slug>-opportunities.md`.
+- `tools/cta_tracker/` (012) reads the corpus (all or a `--companies` subset) →
+  a matplotlib heatmap of CTA-theme intensity per company + a report. One company
+  can be flagged as ours via the sticky `OWN_COMPANY` setting (or `--own`) for
+  us-vs-them analysis; the tool enforces the is_own flag itself (never trusts the model).
 - `signalyser.py` is the top-level launcher: `python signalyser.py <cmd> [args]`
   dispatches to a tool (page/jobs/tenk/youtube/personas/arc/quadrant/assets/reddit).
 - `signalyser_web/` is the web layer (FastAPI): `python -m signalyser_web` serves

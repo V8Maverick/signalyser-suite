@@ -48,6 +48,26 @@
 
         <div class="opp-card">
           <div class="opp-head">
+            <span class="opp-glyph">▦</span>
+            <div>
+              <h3>CTA Tracker</h3>
+              <p class="muted">Heatmap of call-to-action intensity across the corpus —
+                us vs competitors, USPs, and where we're gaining or losing ground.</p>
+            </div>
+          </div>
+          <div class="opp-row">
+            <input id="cta-companies" placeholder="all companies (or a,b,c subset)" autocomplete="off">
+            <button type="button" id="cta-run" data-tool="cta">Track CTAs</button>
+          </div>
+          {% if settings.own_company %}
+            <small class="cta-own">Our company: <strong>{{ settings.own_company }}</strong> · <a href="/settings">change</a></small>
+          {% else %}
+            <small class="warn-inline">Set “our company” in <a href="/settings">Settings</a> for us-vs-them.</small>
+          {% endif %}
+        </div>
+
+        <div class="opp-card">
+          <div class="opp-head">
             <span class="opp-glyph">◎</span>
             <div>
               <h3>Opportunity scan</h3>

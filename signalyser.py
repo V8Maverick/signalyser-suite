@@ -33,6 +33,7 @@ COMMANDS: dict[str, tuple[str, str]] = {
     "personas": ("tools/personas/personas.py", "009 intel corpus -> buyer personas"),
     "arc":      ("tools/positioning_arc/arc.py", "008 intel corpus -> 3-horizon positioning arc"),
     "quadrant": ("tools/quadrant/quadrant.py", "007 intel corpus -> competitive quadrant chart"),
+    "cta":      ("tools/cta_tracker/cta.py", "012 corpus -> CTA intensity heatmap (us vs competitors)"),
     "assets":   ("tools/assets/assets.py", "010 personas + positioning -> written assets"),
     "opportunities": ("tools/opportunities/opportunities.py", "011 company corpus x subreddit -> opportunities + SEO"),
 }
