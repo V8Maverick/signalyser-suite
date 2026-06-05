@@ -17,7 +17,7 @@ Switch to start analysing something else without mixing data; nothing is deleted
     <li class="session-row {{ 'is-active' if s.active }}">
       <span class="status-dot" aria-hidden="true"></span>
       <span class="session-name">{{ s.name }}{% if s.active %} <span class="badge">active</span>{% endif %}</span>
-      <span class="session-counts muted">{{ s.inputs }} intel · {{ s.outputs }} reports</span>
+      <span class="session-counts muted">{{ s.inputs }} intel · {{ s.outputs }} reports{% if s.own_company %} · ours: {{ s.own_company }}{% endif %}</span>
       <span class="session-actions">
         {% if not s.active %}
           <form method="post" action="/sessions/switch" class="inline">

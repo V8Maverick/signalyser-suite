@@ -65,6 +65,15 @@ def main() -> None:
         if "acme-004.md" not in sc.read_company_intel("acme"):
             failures.append("session A lost its own intel after round-trip")
 
+        # Per-session "our company" (active is A here).
+        sc.set_own_company("AcmeCo")
+        if sc.get_own_company() != "AcmeCo":
+            failures.append("own company not set for session A")
+        sc.set_active_session(B)
+        if sc.get_own_company():
+            failures.append("session B leaked session A's own company")
+        sc.set_active_session(A)
+
         # Delete A.
         sc.set_active_session(B)
         sc.delete_session(A)
@@ -94,6 +103,12 @@ def main() -> None:
         c.post("/sessions/delete", data={"name": B}, follow_redirects=False)
         if sc.active_session() != sc.DEFAULT_SESSION:
             failures.append("deleting the active session did not fall back to default")
+
+        # Per-session "our company" via the web route.
+        c.post("/sessions/new", data={"name": A}, follow_redirects=False)
+        c.post("/session/own", data={"own_company": "WebCo"}, follow_redirects=False)
+        if sc.get_own_company() != "WebCo":
+            failures.append("POST /session/own did not set the session's own company")
 
     finally:
         cleanup()

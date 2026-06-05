@@ -5,9 +5,9 @@ CTA Tracker (012) — a weekly call-to-action scoreboard for the competitive set
 Reads the shared corpus (all companies, or a comma-separated subset), extracts the
 key calls-to-action each company leans on (from their page copy, personas and
 positioning), and scores every company 0-10 across the CTA themes that matter in
-THIS market. One company can be flagged as "ours" (OWN_COMPANY / --own) so the
-report calls out where we're gaining or losing ground and where the genuine USPs
-sit — ours and theirs.
+THIS market. One company can be flagged as "ours" — per session (set on the Signal
+Desk) or with --own — so the report calls out where we're gaining or losing ground
+and where the genuine USPs sit — ours and theirs.
 
 Usage: python cta.py [--companies a,b,c] [--own NAME] [--inputs DIR] [-p ...] [-m ...]
 
@@ -237,7 +237,7 @@ def main() -> None:
     if args.companies:
         only = {sc.slugify(c) for c in args.companies.split(",") if c.strip()}
 
-    own_raw = (args.own or os.getenv("OWN_COMPANY") or "").strip()
+    own_raw = (args.own or sc.get_own_company() or "").strip()
     own_slug = sc.slugify(own_raw) if own_raw else ""
 
     print(f"\nReading intelligence from {inputs_dir} ...")

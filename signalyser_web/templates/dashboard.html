@@ -59,10 +59,13 @@
             <input id="cta-companies" placeholder="all companies (or a,b,c subset)" autocomplete="off">
             <button type="button" id="cta-run" data-tool="cta">Track CTAs</button>
           </div>
-          {% if settings.own_company %}
-            <small class="cta-own">Our company: <strong>{{ settings.own_company }}</strong> · <a href="/settings">change</a></small>
-          {% else %}
-            <small class="warn-inline">Set “our company” in <a href="/settings">Settings</a> for us-vs-them.</small>
+          <form class="own-form" method="post" action="/session/own">
+            <span class="own-label">Our company<br><em>this session</em></span>
+            <input name="own_company" value="{{ own_company }}" placeholder="e.g. photobox" autocomplete="off">
+            <button type="submit">Set</button>
+          </form>
+          {% if not own_company %}
+            <small class="cta-own">No company set yet — everyone is treated as a competitor.</small>
           {% endif %}
         </div>
 

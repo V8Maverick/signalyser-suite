@@ -12,6 +12,7 @@ the sticky SESSION) only inside main(), after importing this module.
 """
 import os
 import re
+import json
 import shutil
 from pathlib import Path
 from datetime import datetime
@@ -97,6 +98,44 @@ def delete_session(name: str) -> None:
     target = SESSIONS_ROOT / _session_slug(name)
     if target.is_dir():
         shutil.rmtree(target, ignore_errors=True)
+
+
+# ── Per-session metadata (sessions/<name>/session.json) ───────────────────────
+
+def session_meta_path(session: str | None = None) -> Path:
+    return session_dir(session) / "session.json"
+
+
+def read_session_meta(session: str | None = None) -> dict:
+    p = session_meta_path(session)
+    if p.exists():
+        try:
+            return json.loads(p.read_text(encoding="utf-8"))
+        except (ValueError, OSError):
+            return {}
+    return {}
+
+
+def write_session_meta(updates: dict, session: str | None = None) -> dict:
+    """Merge `updates` into the session's metadata file. Returns the new meta."""
+    meta = read_session_meta(session)
+    meta.update(updates)
+    path = session_meta_path(session)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    return meta
+
+
+def get_own_company(session: str | None = None) -> str:
+    """The 'our company' designation for the (active) session — '' if unset."""
+    return (read_session_meta(session).get("own_company") or "").strip()
+
+
+def set_own_company(name: str, session: str | None = None) -> str:
+    """Set (or clear, with '') the session's 'our company'. Returns the value."""
+    name = (name or "").strip()
+    write_session_meta({"own_company": name}, session)
+    return name
 
 
 # ── Reports & intel corpus (always the active session) ────────────────────────

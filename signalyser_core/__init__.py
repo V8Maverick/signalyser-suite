@@ -35,6 +35,10 @@ from .io import (
     list_sessions,
     create_session,
     delete_session,
+    read_session_meta,
+    write_session_meta,
+    get_own_company,
+    set_own_company,
 )
 
 __all__ = [
@@ -47,6 +51,7 @@ __all__ = [
     "SESSIONS_ROOT", "DEFAULT_SESSION", "active_session", "set_active_session",
     "session_dir", "inputs_dir", "outputs_dir", "list_sessions",
     "create_session", "delete_session",
+    "read_session_meta", "write_session_meta", "get_own_company", "set_own_company",
 ]
 
 

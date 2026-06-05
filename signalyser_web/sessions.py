@@ -24,13 +24,24 @@ def list_sessions() -> list[dict]:
     for name in sc.list_sessions():
         ic, oc = _counts(name)
         rows.append({"name": name, "active": name == active,
-                     "inputs": ic, "outputs": oc})
+                     "inputs": ic, "outputs": oc,
+                     "own_company": sc.get_own_company(name)})
     rows.sort(key=lambda r: (not r["active"], r["name"]))
     return rows
 
 
 def current() -> str:
     return sc.active_session()
+
+
+def own_company() -> str:
+    """The active session's 'our company' designation ('' if unset)."""
+    return sc.get_own_company()
+
+
+def set_own(name: str) -> str:
+    """Set the active session's 'our company'."""
+    return sc.set_own_company(name)
 
 
 def switch(name: str) -> str:

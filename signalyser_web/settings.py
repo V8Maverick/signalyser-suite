@@ -43,7 +43,6 @@ def get_settings() -> dict:
         "model": model if model in CLOUD_MODELS else "",
         "has_api_key": bool(os.getenv("ANTHROPIC_API_KEY")),
         "reddit_username": os.getenv("REDDIT_USERNAME") or "",
-        "own_company": os.getenv("OWN_COMPANY") or "",
         "ollama_host": os.getenv("OLLAMA_HOST") or "http://localhost:11434",
         "model_choices": MODEL_CHOICES,
     }
@@ -51,8 +50,7 @@ def get_settings() -> dict:
 
 def update_settings(*, processor: str | None = None, model: str | None = None,
                     api_key: str | None = None,
-                    reddit_username: str | None = None,
-                    own_company: str | None = None) -> list[str]:
+                    reddit_username: str | None = None) -> list[str]:
     """Persist any provided settings to .env. Returns a list of validation errors.
 
     Blank strings are ignored (treated as "leave unchanged") except reddit_username,
@@ -78,9 +76,6 @@ def update_settings(*, processor: str | None = None, model: str | None = None,
 
     if reddit_username is not None:
         set_env_var("REDDIT_USERNAME", reddit_username.strip())
-
-    if own_company is not None:
-        set_env_var("OWN_COMPANY", own_company.strip())
 
     return errors
 

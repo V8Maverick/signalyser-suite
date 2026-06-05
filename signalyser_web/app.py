@@ -68,6 +68,7 @@ def create_app() -> FastAPI:
         }
         if ui == "v2":
             ctx["companies"] = corpus_mod.list_inputs()
+            ctx["own_company"] = sessions_mod.own_company()
             ctx["tools"] = TOOLS
             return TEMPLATES.TemplateResponse(request, "dashboard.html", ctx)
         return TEMPLATES.TemplateResponse(request, "tools.html", ctx)
@@ -175,7 +176,6 @@ def create_app() -> FastAPI:
             api_key=str(form.get("api_key") or "") or None,
             reddit_username=(str(form["reddit_username"])
                              if "reddit_username" in form else None),
-            own_company=(str(form["own_company"]) if "own_company" in form else None),
         )
         return RedirectResponse(url="/settings?saved=1", status_code=303)
 
@@ -198,6 +198,13 @@ def create_app() -> FastAPI:
         form = dict(await request.form())
         sessions_mod.delete(str(form.get("name") or ""))
         return RedirectResponse(url="/sessions", status_code=303)
+
+    @app.post("/session/own")
+    async def session_own(request: Request):
+        form = dict(await request.form())
+        sessions_mod.set_own(str(form.get("own_company") or ""))
+        back = request.headers.get("referer") or "/tools"
+        return RedirectResponse(url=back, status_code=303)
 
     @app.get("/ui/{version}")
     def switch_ui(version: str, request: Request):

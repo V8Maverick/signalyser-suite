@@ -190,8 +190,20 @@ body.ui-v2 .opp-row button {
   font-family: var(--body); font-weight: 700; font-size: .9rem; cursor: pointer; white-space: nowrap;
 }
 body.ui-v2 .opp-row button:hover { filter: brightness(1.06); }
-body.ui-v2 .cta-own { display: block; margin-top: .5rem; font-size: .8rem; color: var(--muted); }
-body.ui-v2 .cta-own strong { color: var(--signal); }
+body.ui-v2 .cta-own { display: block; margin-top: .5rem; font-size: .78rem; color: var(--muted); }
+body.ui-v2 .own-form { display: flex; align-items: center; gap: .5rem; margin-top: .7rem; flex-wrap: wrap; }
+body.ui-v2 .own-label { font-size: .68rem; color: var(--muted); font-family: var(--mono); line-height: 1.2; }
+body.ui-v2 .own-label em { color: var(--signal); font-style: normal; }
+body.ui-v2 .own-form input {
+  flex: 1; min-width: 130px; padding: .42rem .6rem; background: var(--bg2); color: var(--ink);
+  border: 1px solid var(--line2); border-radius: 7px; font-family: var(--mono); font-size: .8rem;
+}
+body.ui-v2 .own-form input:focus { outline: none; border-color: var(--signal); box-shadow: 0 0 0 3px rgba(231,179,61,.14); }
+body.ui-v2 .own-form button {
+  background: var(--bg3); color: var(--ink); border: 1px solid var(--line2); border-radius: 7px;
+  padding: .42rem .9rem; font-family: var(--body); font-weight: 600; font-size: .82rem; cursor: pointer;
+}
+body.ui-v2 .own-form button:hover { border-color: var(--signal); color: var(--signal); }
 
 /* instruments */
 body.ui-v2 .instruments { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: .4rem; }

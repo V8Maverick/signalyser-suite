@@ -54,8 +54,12 @@ back to local. **Never hardcode or guess an API key.**
   saved as a report + `inputs/<slug>-opportunities.md`.
 - `tools/cta_tracker/` (012) reads the corpus (all or a `--companies` subset) →
   a matplotlib heatmap of CTA-theme intensity per company + a report. One company
-  can be flagged as ours via the sticky `OWN_COMPANY` setting (or `--own`) for
-  us-vs-them analysis; the tool enforces the is_own flag itself (never trusts the model).
+  can be flagged as ours for us-vs-them analysis; the tool enforces the is_own flag
+  itself (never trusts the model).
+- "Our company" is **per session**, stored in `sessions/<name>/session.json`
+  (`sc.get_own_company()` / `sc.set_own_company()`, generic `read/write_session_meta`).
+  Set it on the v2 dashboard (POST `/session/own`) once a session's corpus exists;
+  the CTA tool reads the active session's value (or `--own`). Not a global .env setting.
 - `signalyser.py` is the top-level launcher: `python signalyser.py <cmd> [args]`
   dispatches to a tool (page/jobs/tenk/youtube/personas/arc/quadrant/assets/reddit).
 - `signalyser_web/` is the web layer (FastAPI): `python -m signalyser_web` serves
