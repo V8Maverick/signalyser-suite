@@ -10,6 +10,38 @@ Built by adapting the `marketer-that-ships` experiments onto a shared engine
 The original **RedAlyser** Reddit tool is included verbatim and unchanged under
 `tools/reddit/`.
 
+## Quickstart
+
+```bash
+git clone https://github.com/V8Maverick/signalyser-suite
+cd signalyser-suite
+
+# macOS / Linux
+./setup.sh
+
+# Windows (PowerShell)
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -e .
+```
+
+Launch the web UI, then open <http://localhost:8000>:
+
+```bash
+python -m signalyser_web        # Windows: .\start-web.ps1   (stop: .\stop-web.ps1)
+```
+
+In **Settings**, pick how runs are processed:
+
+- **Local** (default — private, free, offline): install [Ollama](https://ollama.com)
+  and pull a model (`ollama pull qwen3.5:9b`). Choose the 9B if the 35B is too heavy.
+- **Cloud** (fast, highest quality): paste an Anthropic (Claude) API key.
+
+Then on the **Signal Desk**: paste competitor URLs into **Intake** to build the
+session's corpus, name a company, and run **Personas / Positioning Arc / Quadrant /
+CTA Tracker / Written Assets** — or the standalone Reddit / YouTube tools. Your
+corpus, reports and `.env` stay local (gitignored). See below for full detail.
+
 ## Architecture
 
 ```
